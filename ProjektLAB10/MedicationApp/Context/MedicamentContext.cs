@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MedicationApp.Context
 {
-    public class MedicamentContext : DbContext 
+    public class MedicamentContext : DbContext
     {
         public MedicamentContext() { }
         public virtual DbSet<Prescription> Prescriptions { get; set; }
@@ -16,7 +16,8 @@ namespace MedicationApp.Context
             optionsBuilder.UseSqlServer("Data Source=db-mssql;Initial Catalog=2019SBD;Integrated Security=True;TrustServerCertificate=True");
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Patient>(entity => {
+            modelBuilder.Entity<Patient>(entity =>
+            {
                 entity.HasKey(e => e.IdPatient);
 
                 entity.ToTable("patient");
@@ -140,4 +141,5 @@ namespace MedicationApp.Context
             }
             return patient;
         }
+    }
 }

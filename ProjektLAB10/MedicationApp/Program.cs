@@ -1,3 +1,5 @@
+using MedicamentApp.Services;
+
 namespace MedicationApp
 {
     public class Program
@@ -12,6 +14,8 @@ namespace MedicationApp
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddScoped<IMedicamentService, MedicamentService>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
