@@ -1,0 +1,104 @@
+﻿using MedicamentApp.Models.ContextModels;
+using Microsoft.EntityFrameworkCore;
+
+namespace MedicationApp.Context
+{
+    public class MedicamentContext : DbContext 
+    {
+        public MedicamentContext() { }
+        public virtual DbSet<Prescription> Prescriptions { get; set; }
+        public virtual DbSet<Prescription_Medicament> Prescription_Medicaments { get; set; }
+        public virtual DbSet<Patient> Patients { get; set; }
+        public virtual DbSet<Doctor> Doctors { get; set; }
+        public virtual DbSet<Medicament> Medicaments { get; set; }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
+            optionsBuilder.UseSqlServer("Data Source=db-mssql;Initial Catalog=2019SBD;Integrated Security=True;TrustServerCertificate=True");
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Patient>(entity => {
+                entity.HasKey(e => e.IdPatient);
+
+                entity.ToTable("patient");
+
+                entity.Property(e => e.IdPatient)
+                    .HasColumnName("IdPatient");
+                entity.Property(e => e.FirstName)
+                    .HasColumnName("FirstName");
+                entity.Property(e => e.LastName)
+                    .HasColumnName("LastName");
+                entity.Property(e => e.BirthDate)
+                    .HasColumnName("BirthDate");
+            });
+
+            modelBuilder.Entity<Prescription>(entity =>
+            {
+                entity.HasKey(e => e.IdPrescription);
+
+                entity.ToTable("prescription");
+
+                entity.Property(e => e.IdPrescription)
+                    .HasColumnName("IdPrescription");
+                entity.Property(e => e.Date)
+                    .HasColumnName("Date");
+                entity.Property(e => e.DueDate)
+                    .HasColumnName("DueDate");
+                entity.Property(e => e.IdPatient)
+                    .HasColumnName("IdPatient");
+                entity.Property(e => e.IdDoctor)
+                    .HasColumnName("IdDoctor");
+            });
+
+            modelBuilder.Entity<Doctor>(entity =>
+            {
+                entity.HasKey(e => e.IdDoctor);
+
+                entity.ToTable("doctor");
+
+                entity.Property(e => e.IdDoctor)
+                    .HasColumnName("IdDoctor");
+                entity.Property(e => e.FirstName)
+                    .HasColumnName("FirstName");
+                entity.Property(e => e.LastName)
+                    .HasColumnName("LastName");
+                entity.Property(e => e.Email)
+                    .HasColumnName("Email");
+            });
+
+            modelBuilder.Entity<Medicament>(entity =>
+            {
+                entity.HasKey(e => e.IdMedicament);
+
+                entity.ToTable("medicament");
+
+                entity.Property(e => e.IdMedicament)
+                    .HasColumnName("IdMedicament");
+                entity.Property(e => e.Name)
+                    .HasColumnName("Name");
+                entity.Property(e => e.Description)
+                    .HasColumnName("Description");
+                entity.Property(e => e.Type)
+                    .HasColumnName("Type");
+            });
+
+            modelBuilder.Entity<Prescription_Medicament>(entity =>
+            {
+                entity.HasKey(e => new { e.IdMedicament, e.IdPrescription });
+
+                entity.ToTable("prescription_medicament");
+
+                entity.Property(e => e.Dose)
+                    .HasColumnName("Dose");
+                entity.Property(e => e.Details)
+                    .HasColumnName("Details");
+
+                entity.HasOne(d => d.Medicament)
+                    .WithMany(p => p.Prescription_Medicaments)
+                    .HasForeignKey(d => d.IdMedicament);
+
+                entity.HasOne(d => d.Prescription)
+                    .WithMany(p => p.Prescription_Medicaments)
+                    .HasForeignKey(d => d.IdPrescription);
+            });
+        }
+    }
+}
