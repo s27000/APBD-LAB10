@@ -1,4 +1,5 @@
 ﻿using MedicamentApp.Models.ContextModels;
+using MedicamentApp.Models.RequestModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace MedicationApp.Context
@@ -100,5 +101,43 @@ namespace MedicationApp.Context
                     .HasForeignKey(d => d.IdPrescription);
             });
         }
-    }
+
+        public async Task<Doctor> GetDoctor(int idDoctor)
+        {
+            var doctor = await Doctors
+                .Where(e => e.IdDoctor.Equals(idDoctor))
+                .FirstOrDefaultAsync();
+
+            if (doctor == null)
+            {
+                throw new Exception("A doctor with such IdDoctor does not exist");
+            }
+            return doctor;
+        }
+
+        public async Task<Medicament> GetMedicament(int idMedicament)
+        {
+            var medicament = await Medicaments
+                        .Where(e => e.IdMedicament.Equals(idMedicament))
+                        .FirstOrDefaultAsync();
+
+            if (medicament == null)
+            {
+                throw new Exception("Medicament with IdMedicament = " + idMedicament + " does not exist");
+            }
+            return medicament;
+        }
+
+        public async Task<Patient> GetPatient(int idPatient)
+        {
+            var patient = await Patients
+                    .Where(e => e.IdPatient.Equals(idPatient))
+                    .FirstOrDefaultAsync();
+
+            if (patient == null)
+            {
+                throw new Exception("Patient does not exist");
+            }
+            return patient;
+        }
 }
